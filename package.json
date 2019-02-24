@@ -4,11 +4,19 @@
   "description": "Fantasy league for politics",
   "main": "index.js",
   "dependencies": {
+    "antd": "^3.13.6",
     "next": "^8.0.3",
     "react": "^16.8.3",
     "react-dom": "^16.8.3"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "babel-plugin-import": "^1.11.0",
+    "css-loader": "^2.1.0",
+    "less": "^3.9.0",
+    "less-loader": "^4.1.0",
+    "mini-css-extract-plugin": "^0.5.0",
+    "style-loader": "^0.23.1"
+  },
   "scripts": {
     "dev": "next",
     "build": "next build",

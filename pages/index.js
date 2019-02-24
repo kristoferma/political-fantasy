@@ -1,5 +1,12 @@
+import { Layout } from 'antd'
+
 function Home() {
-  return <div>Welcome to next.js!</div>
+  return (
+    <Layout>
+      <Layout.Header>Header</Layout.Header>
+      <Layout.Content>Content</Layout.Content>
+    </Layout>
+  )
 }
 
 export default Home
