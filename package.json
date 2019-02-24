@@ -1,0 +1,27 @@
+{
+  "name": "political-fantasy",
+  "version": "1.0.0",
+  "description": "Fantasy league for politics",
+  "main": "index.js",
+  "dependencies": {
+    "next": "^8.0.3",
+    "react": "^16.8.3",
+    "react-dom": "^16.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kristoferma/political-fantasy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kristoferma/political-fantasy/issues"
+  },
+  "homepage": "https://github.com/kristoferma/political-fantasy#readme"
+}
