@@ -4,7 +4,7 @@ function Home() {
   return (
     <Layout>
       <Layout.Header>Header</Layout.Header>
-      <Layout.Content>Content</Layout.Content>
+      <Layout.Content />
     </Layout>
   )
 }
