@@ -1,24 +1,18 @@
-import { Button, Col, Form, Icon, Input, Layout, Row } from 'antd'
+import { Button, Col, Form, Icon, Input, Row } from 'antd'
 
 export default class Signup extends React.Component {
   render() {
     return (
-      <Layout style={{ height: '100%' }}>
-        <Layout.Header>Header</Layout.Header>
-        <Layout.Content type="flex">
-          <Row
-            type="flex"
-            justify="center"
-            align="middle"
-            style={{ height: '100%' }}
-          >
-            <Col span={8}>
-              <WrappedNormalSignupForm />
-            </Col>
-          </Row>
-        </Layout.Content>
-        <Layout.Footer />
-      </Layout>
+      <Row
+        type="flex"
+        justify="center"
+        align="middle"
+        style={{ height: '100%' }}
+      >
+        <Col span={8}>
+          <WrappedNormalSignupForm />
+        </Col>
+      </Row>
     )
   }
 }
