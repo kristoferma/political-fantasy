@@ -9,7 +9,7 @@ const dgraphClient = new dgraph.DgraphClient(clientStub)
 
 async function setSchema() {
   const schema = `email: string @index(exact) @upsert .
-  pass: password .`
+  password: password .`
 
   const operation = new dgraph.Operation()
   operation.setSchema(schema)
@@ -26,14 +26,10 @@ async function login(username, password) {
     const query = `
     {
       login_attempt(func: eq(email, "${username}")) {
-        checkpwd(pass, "${password}")
+        checkpwd(password, "${password}")
       }
     }   
 `
-    const variables = {
-      $username: 'kristoferma@me.com',
-      $password: 'password'
-    }
     const response = await transaction.query(query)
     const json = await response.getJson()
     return json.login_attempt[0]['checkpwd(pass)']
