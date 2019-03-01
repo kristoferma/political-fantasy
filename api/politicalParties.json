@@ -1,0 +1,22 @@
+[
+  {
+    "uid": "_:R",
+    "abbreviation": "R",
+    "name": "Republican Party"
+  },
+  {
+    "uid": "_:D",
+    "abbreviation": "D",
+    "name": "Democratic Party"
+  },
+  {
+    "uid": "_:I",
+    "abbreviation": "I",
+    "name": "Independent Politicians"
+  },
+  {
+    "uid": "_:ID",
+    "abbreviation": "ID",
+    "name": "Independent Democrats"
+  }
+]

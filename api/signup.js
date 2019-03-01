@@ -31,7 +31,7 @@ const login = async (req, res) => {
       res.setHeader('Set-Cookie', sign({ email }, 'prump'))
       send(res, 200, {
         message: 'Account created, user logged in',
-        token: sign({ email }, 'prump')
+        token: sign({ email }, 'prump'),
       })
     } else if (
       result.loginAttempt.length > 0 &&
@@ -39,12 +39,12 @@ const login = async (req, res) => {
     ) {
       res.setHeader('Set-Cookie', sign({ email }, 'prump'))
       send(res, 200, {
-        message: 'Account already exists, user logged in'
+        message: 'Account already exists, user logged in',
       })
     } else {
       send(res, 409, {
         error:
-          'Sorry, this email is used by another account. Please select a new email'
+          'Sorry, this email is used by another account. Please select a new email',
       })
     }
   } catch (error) {
