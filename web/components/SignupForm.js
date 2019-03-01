@@ -1,4 +1,5 @@
-import { Button, Form, Icon, Input } from 'antd'
+import { Button, Form, Icon, Input, message } from 'antd'
+import Router from 'next/router'
 
 class SignupForm extends React.Component {
   signUp = async e => {
@@ -25,7 +26,9 @@ class SignupForm extends React.Component {
             })
           }
           if (response.ok) {
-            console.log(json)
+            this.props.onSuccesfullAuthentication(json.name)
+            message.success(json.message, 10)
+            Router.push(`/user?user=${json.name}`, `/user/${json.name}`)
           }
         } catch (error) {
           console.error(error)
@@ -39,8 +42,13 @@ class SignupForm extends React.Component {
     return (
       <Form onSubmit={this.signUp}>
         <Form.Item>
+          {getFieldDecorator('name', {
+            rules: [{ required: true, message: 'What is your name?' }],
+          })(<Input placeholder="Full Name" prefix={<Icon type="user" />} />)}
+        </Form.Item>
+        <Form.Item>
           {getFieldDecorator('email', {
-            rules: [{ required: true, message: 'Please input your username!' }],
+            rules: [{ required: true, message: 'What is your email?' }],
           })(
             <Input
               prefix={<Icon type="user" />}
