@@ -1,6 +1,7 @@
 const { send } = require('micro')
 const login = require('./login')
 const signup = require('./signup')
+const verifyLogin = require('./verifyLogin')
 
 const dev = async (req, res) => {
   res.setHeader('Content-Type', 'application/json')
@@ -15,15 +16,17 @@ const dev = async (req, res) => {
     'Authorization, Access-Control-Allow-Headers, Access-Control-Allow-Methods, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers, Set-Cookie'
   )
 
-  console.log(req.headers)
-
-  if (req.method == 'OPTIONS') {
+  if (req.method === 'OPTIONS') {
     return send(res, 200)
   }
 
   switch (req.url) {
     case '/login':
       await login(req, res)
+      break
+
+    case '/verifyLogin':
+      await verifyLogin(req, res)
       break
 
     case '/signup':

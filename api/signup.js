@@ -1,7 +1,7 @@
 const { json, send, createError, run } = require('micro')
 const dgraph = require('dgraph-js')
 const grpc = require('grpc')
-const { sign, verify } = require('jsonwebtoken')
+const { sign } = require('jsonwebtoken')
 
 const clientStub = new dgraph.DgraphClientStub(
   'localhost:9080',
@@ -28,7 +28,10 @@ const login = async (req, res) => {
       mutation.setSetJson({ email, password, name })
       await transaction.mutate(mutation)
       await transaction.commit()
-      res.setHeader('Set-Cookie', sign({ email }, 'prump'))
+      res.setHeader(
+        'Set-Cookie',
+        `fantasyPolitics=${sign({ email, name }, 'prump')}`
+      )
       send(res, 200, {
         message: 'Account created, user logged in',
         name,
@@ -37,7 +40,10 @@ const login = async (req, res) => {
       result.loginAttempt.length > 0 &&
       result.loginAttempt[0]['checkpwd(password)']
     ) {
-      res.setHeader('Set-Cookie', sign({ email }, 'prump'))
+      res.setHeader(
+        'Set-Cookie',
+        `fantasyPolitics=${sign({ email, name }, 'prump')}`
+      )
       send(res, 200, {
         message: 'Account already exists, user logged in',
         name,

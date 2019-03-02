@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Layout, Menu, Avatar } from 'antd'
+import { Layout, Menu } from 'antd'
 import Link from 'next/link'
 import App, { Container } from 'next/app'
 import React from 'react'
+import fetch from 'isomorphic-unfetch'
 import '../static/styles/application.less'
 
 export default class MyApp extends App {
@@ -16,12 +17,28 @@ export default class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
-
     return { pageProps }
+  }
+
+  componentDidMount = async () => {
+    await this.verifyLogin()
   }
 
   onSuccesfullAuthentication = name => {
     this.setState({ name })
+  }
+
+  verifyLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/verifyLogin', {
+        method: 'GET',
+        credentials: 'include',
+      })
+      const { name } = await response.json()
+      this.setState({ name })
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   render() {
@@ -62,7 +79,9 @@ export default class MyApp extends App {
                   <a>Congress</a>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="2">nav 2</Menu.Item>
+              <Menu.Item key="2" onClick={this.verifyLogin}>
+                Verify Login
+              </Menu.Item>
               <Menu.Item key="3">nav 3</Menu.Item>
               <Menu.Item key="4" style={{ marginLeft: 'auto' }}>
                 {this.state.name ? (

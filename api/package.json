@@ -9,6 +9,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.5.0",
     "micro": "^9.3.3",
+    "micro-cookie": "^1.1.4",
     "micro-cors": "^0.1.1"
   },
   "devDependencies": {
@@ -16,7 +17,7 @@
   },
   "scripts": {
     "start": "micro",
-    "dev": "micro-dev . -p 3001"
+    "dev": "micro-dev . -p 3001 --ignore=../web"
   },
   "keywords": [],
   "author": "",
