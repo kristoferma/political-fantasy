@@ -12,7 +12,7 @@ const dgraphClient = new dgraph.DgraphClient(clientStub)
 const login = async (req, res) => {
   const transaction = dgraphClient.newTxn()
   try {
-    const { email, password } = await json(req)
+    const { email, password, name } = await json(req)
     const query = `
         {
           loginAttempt(func: eq(email, "${email}")) {
@@ -25,13 +25,13 @@ const login = async (req, res) => {
     const result = await response.getJson()
     if (result.loginAttempt.length === 0) {
       const mutation = new dgraph.Mutation()
-      mutation.setSetJson({ email, password })
+      mutation.setSetJson({ email, password, name })
       await transaction.mutate(mutation)
       await transaction.commit()
       res.setHeader('Set-Cookie', sign({ email }, 'prump'))
       send(res, 200, {
         message: 'Account created, user logged in',
-        token: sign({ email }, 'prump'),
+        name,
       })
     } else if (
       result.loginAttempt.length > 0 &&
@@ -40,6 +40,7 @@ const login = async (req, res) => {
       res.setHeader('Set-Cookie', sign({ email }, 'prump'))
       send(res, 200, {
         message: 'Account already exists, user logged in',
+        name,
       })
     } else {
       send(res, 409, {

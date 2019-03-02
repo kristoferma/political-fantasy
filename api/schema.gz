@@ -1,6 +1,6 @@
 email: string @index(exact) @upsert .
-pass: password .
+password: password .
 date_of_birth: dateTime .
 party: uid @reverse .
-party.abbreviation: string @index(hash) .
+abbreviation: string @index(exact, fulltext) .
 state: uid @reverse .
