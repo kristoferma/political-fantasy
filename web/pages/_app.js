@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, message } from 'antd'
 import Link from 'next/link'
 import App, { Container } from 'next/app'
 import React from 'react'
@@ -37,6 +37,24 @@ export default class MyApp extends App {
       if (response.ok) {
         const { name } = await response.json()
         this.setState({ name })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  logout = async () => {
+    try {
+      const response = await fetch('http://localhost:3001/logout', {
+        method: 'POST',
+        credentials: 'include',
+      })
+      const json = await response.json()
+      if (response.ok) {
+        message.success(json.message)
+        this.setState({ name: null })
+      } else {
+        message.error(json.error)
       }
     } catch (error) {
       console.error(error)
@@ -85,20 +103,30 @@ export default class MyApp extends App {
                 Verify Login
               </Menu.Item>
               <Menu.Item key="3">nav 3</Menu.Item>
-              <Menu.Item key="4" style={{ marginLeft: 'auto' }}>
-                {this.state.name ? (
-                  <Link
-                    href={`/user?user=${this.state.name}`}
-                    as={`/user/${this.state.name}`}
-                  >
-                    <a>{this.state.name}</a>
-                  </Link>
-                ) : (
+              {this.state.name ? (
+                <Menu.SubMenu
+                  title={this.state.name}
+                  style={{ marginLeft: 'auto' }}
+                >
+                  <Menu.Item key="setting:1">
+                    <Link
+                      href={`/user?user=${this.state.name}`}
+                      as={`/user/${this.state.name}`}
+                    >
+                      <a>Profile</a>
+                    </Link>
+                  </Menu.Item>
+                  <Menu.Item key="setting:2" onClick={this.logout}>
+                    Log out
+                  </Menu.Item>
+                </Menu.SubMenu>
+              ) : (
+                <Menu.Item key="4" style={{ marginLeft: 'auto' }}>
                   <Link href="/signup">
                     <a>Login / Signup</a>
                   </Link>
-                )}
-              </Menu.Item>
+                </Menu.Item>
+              )}
             </Menu>
           </Layout.Header>
           <Layout.Content type="flex">

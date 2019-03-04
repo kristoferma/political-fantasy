@@ -1,5 +1,6 @@
 const { send } = require('micro')
 const login = require('./login')
+const logout = require('./logout')
 const signup = require('./signup')
 const verifyLogin = require('./verifyLogin')
 
@@ -30,6 +31,10 @@ const dev = async (req, res) => {
 
       case '/signup':
         await signup(req, res)
+        break
+
+      case '/logout':
+        await logout(req, res)
         break
 
       default:
