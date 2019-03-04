@@ -17,25 +17,25 @@ const dev = async (req, res) => {
   )
 
   if (req.method === 'OPTIONS') {
-    return send(res, 200)
-  }
+    send(res, 200)
+  } else {
+    switch (req.url) {
+      case '/login':
+        await login(req, res)
+        break
 
-  switch (req.url) {
-    case '/login':
-      await login(req, res)
-      break
+      case '/verifyLogin':
+        await verifyLogin(req, res)
+        break
 
-    case '/verifyLogin':
-      await verifyLogin(req, res)
-      break
+      case '/signup':
+        await signup(req, res)
+        break
 
-    case '/signup':
-      await signup(req, res)
-      break
-
-    default:
-      send(res, 404, '404. Not found.')
-      break
+      default:
+        send(res, 404, '404. Not found.')
+        break
+    }
   }
 }
 

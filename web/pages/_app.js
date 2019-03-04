@@ -34,8 +34,10 @@ export default class MyApp extends App {
         method: 'GET',
         credentials: 'include',
       })
-      const { name } = await response.json()
-      this.setState({ name })
+      if (response.ok) {
+        const { name } = await response.json()
+        this.setState({ name })
+      }
     } catch (error) {
       console.error(error)
     }
