@@ -1,7 +1,9 @@
-import { Button, Form, Icon, Input, message } from 'antd'
+import { Button, Form, Icon, Input, message, Radio } from 'antd'
 import Router from 'next/router'
 
 class SignupForm extends React.Component {
+  state = { isLogin: true }
+
   signUp = async e => {
     e.preventDefault()
     const { validateFields, setFields } = this.props.form
@@ -39,13 +41,28 @@ class SignupForm extends React.Component {
   render() {
     // eslint-disable-next-line react/destructuring-assignment
     const { getFieldDecorator } = this.props.form
+    const { isLogin } = this.state
     return (
       <Form onSubmit={this.signUp}>
         <Form.Item>
-          {getFieldDecorator('name', {
-            rules: [{ required: true, message: 'What is your name?' }],
-          })(<Input placeholder="Full Name" prefix={<Icon type="user" />} />)}
+          <Radio.Group
+            defaultValue="login"
+            buttonStyle="solid"
+            onChange={({ target }) => {
+              this.setState({ isLogin: target.value === 'login' })
+            }}
+          >
+            <Radio.Button value="login">Login</Radio.Button>
+            <Radio.Button value="signup">Signup</Radio.Button>
+          </Radio.Group>
         </Form.Item>
+        {isLogin ? null : (
+          <Form.Item>
+            {getFieldDecorator('name', {
+              rules: [{ required: true, message: 'What is your name?' }],
+            })(<Input placeholder="Full Name" prefix={<Icon type="user" />} />)}
+          </Form.Item>
+        )}
         <Form.Item>
           {getFieldDecorator('email', {
             rules: [{ required: true, message: 'What is your email?' }],
@@ -70,7 +87,7 @@ class SignupForm extends React.Component {
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
-            Sign up!
+            {isLogin ? 'Login!' : 'Sign up!'}
           </Button>
         </Form.Item>
       </Form>

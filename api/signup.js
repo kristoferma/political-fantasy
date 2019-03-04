@@ -18,6 +18,7 @@ const login = async (req, res) => {
           loginAttempt(func: eq(email, "${email}")) {
             email
             checkpwd(password, "${password}")
+            name
           }
         }   
     `
@@ -40,13 +41,17 @@ const login = async (req, res) => {
       result.loginAttempt.length > 0 &&
       result.loginAttempt[0]['checkpwd(password)']
     ) {
+      const dbUser = result.loginAttempt[0]
       res.setHeader(
         'Set-Cookie',
-        `fantasyPolitics=${sign({ email, name }, 'prump')}`
+        `fantasyPolitics=${sign(
+          { email: dbUser.email, name: dbUser.name },
+          'prump'
+        )}`
       )
       send(res, 200, {
         message: 'Account already exists, user logged in',
-        name,
+        name: dbUser.name,
       })
     } else {
       send(res, 409, {
