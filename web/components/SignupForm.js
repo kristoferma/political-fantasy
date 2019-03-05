@@ -65,7 +65,13 @@ class SignupForm extends React.Component {
         )}
         <Form.Item>
           {getFieldDecorator('email', {
-            rules: [{ required: true, message: 'What is your email?' }],
+            rules: [
+              { required: true, message: 'What is your email?' },
+              {
+                type: 'email',
+                message: 'The input is not valid E-mail!',
+              },
+            ],
           })(
             <Input
               prefix={<Icon type="user" />}

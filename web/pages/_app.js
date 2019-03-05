@@ -52,7 +52,7 @@ export default class MyApp extends App {
       const json = await response.json()
       if (response.ok) {
         message.success(json.message)
-        this.setState({ name: null })
+        this.setState({ name: false })
       } else {
         message.error(json.error)
       }
@@ -64,6 +64,7 @@ export default class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props
     pageProps.onSuccesfullAuthentication = this.onSuccesfullAuthentication
+    pageProps.isAuthenticated = this.state.name !== false
     return (
       <Container>
         <Layout
