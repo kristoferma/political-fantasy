@@ -30,7 +30,7 @@ export default class MyApp extends App {
 
   verifyLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3001/verifyLogin', {
+      const response = await fetch('http://localhost:3000/api/verifyLogin', {
         method: 'GET',
         credentials: 'include',
       })
@@ -45,7 +45,7 @@ export default class MyApp extends App {
 
   logout = async () => {
     try {
-      const response = await fetch('http://localhost:3001/logout', {
+      const response = await fetch('http://localhost:3000/api/logout', {
         method: 'POST',
         credentials: 'include',
       })

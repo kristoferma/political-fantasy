@@ -10,14 +10,19 @@ class SignupForm extends React.Component {
     validateFields(async (err, values) => {
       if (!err)
         try {
-          const response = await fetch('http://localhost:3001/signup', {
-            method: 'POST',
-            body: JSON.stringify(values),
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
+          const response = await fetch(
+            this.state.isLogin
+              ? 'http://localhost:3000/api/login'
+              : 'http://localhost:3000/api/signup',
+            {
+              method: 'POST',
+              body: JSON.stringify(values),
+              credentials: 'include',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          )
           const json = await response.json()
           if (response.status === 409) {
             setFields({
@@ -30,7 +35,7 @@ class SignupForm extends React.Component {
           if (response.ok) {
             this.props.onSuccesfullAuthentication(json.name)
             message.success(json.message, 10)
-            Router.push(`/user?user=${json.name}`, `/user/${json.name}`)
+            Router.push(`/user/${json.name}`)
           }
         } catch (error) {
           console.error(error)

@@ -11,7 +11,7 @@ const dgraphClient = new dgraph.DgraphClient(clientStub)
 module.exports = async (req, res) => {
   const transaction = dgraphClient.newTxn()
   try {
-    const { email, password, name } = req.body
+    const { email, password } = req.body
     const query = `
       {
         loginAttempt(func: eq(email, "${email}")) {
@@ -24,22 +24,25 @@ module.exports = async (req, res) => {
   `
     const response = await transaction.query(query)
     const result = await response.getJson()
-    if (result.loginAttempt.length === 0) {
-      const mutation = new dgraph.Mutation()
-      mutation.setSetJson({ email, password, name })
-      const assigned = await transaction.mutate(mutation)
-      // Get the id of the only mutated node: The UserID
-      const userID = assigned.getUidsMap().get('blank-0')
-      await transaction.commit()
-      res.cookie('politicalFantasy', sign({ email, name, userID }, 'prump'))
+    if (
+      result.loginAttempt.length > 0 &&
+      result.loginAttempt[0]['checkpwd(password)']
+    ) {
+      const dbUser = result.loginAttempt[0]
+      res.cookie(
+        'politicalFantasy',
+        sign(
+          { email: dbUser.email, name: dbUser.name, userID: dbUser.uid },
+          'prump'
+        )
+      )
       res.status(200).send({
-        message: 'Account created, user logged in',
-        name,
+        message: 'User succesfully logged in',
+        name: dbUser.name,
       })
     } else {
       res.status(409).send({
-        error:
-          'Sorry, this email is used by another account. Please select a new email',
+        error: 'Sorry, wrong email or password',
       })
     }
   } catch (error) {

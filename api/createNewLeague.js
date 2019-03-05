@@ -1,6 +1,3 @@
-const { send, run, json, createError } = require('micro')
-const parseCookies = require('micro-cookie')
-const { verify } = require('jsonwebtoken')
 const dgraph = require('dgraph-js')
 const grpc = require('grpc')
 
@@ -10,11 +7,11 @@ const clientStub = new dgraph.DgraphClientStub(
 )
 const dgraphClient = new dgraph.DgraphClient(clientStub)
 
-const createNewLeague = async (req, res) => {
-  const { name, date } = await json(req)
+module.exports = async (req, res) => {
+  const { name, date } = await req.body
   const txn = dgraphClient.newTxn()
   try {
-    const token = verify(req.cookies.fantasyPolitics, 'prump')
+    const token = req.user
     const mu = new dgraph.Mutation()
     mu.setSetJson({
       leagueName: name,
@@ -24,11 +21,9 @@ const createNewLeague = async (req, res) => {
     })
     await txn.mutate(mu)
     txn.commit()
-    await send(res, 200, { name: token.name })
+    res.status(200).send({ name: token.name })
   } catch (error) {
     console.error(error)
-    send(res, 409)
+    res.sendStatus(409)
   }
 }
-
-module.exports = (req, res) => run(req, res, createNewLeague)

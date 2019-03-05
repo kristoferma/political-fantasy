@@ -1,4 +1,3 @@
-const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
@@ -9,24 +8,24 @@ module.exports = {
         {
           // for HMR support.
           loader:
-            !isServer && dev ? 'style-loader' : MiniCssExtractPlugin.loader
+            !isServer && dev ? 'style-loader' : MiniCssExtractPlugin.loader,
         },
         { loader: 'css-loader' },
         {
           loader: 'less-loader',
           options: {
-            javascriptEnabled: true
-          }
-        }
-      ]
+            javascriptEnabled: true,
+          },
+        },
+      ],
     })
 
     config.plugins.push(
       new MiniCssExtractPlugin({
-        filename: '[name].css'
+        filename: '[name].css',
       })
     )
 
     return config
-  }
+  },
 }
