@@ -4,3 +4,6 @@ date_of_birth: dateTime .
 party: uid @reverse .
 abbreviation: string @index(exact, fulltext) .
 state: uid @reverse .
+leagueName: string .
+leagueOwner: uid @reverse .
+leagueStartDate: dateTime .

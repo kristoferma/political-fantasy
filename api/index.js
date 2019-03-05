@@ -1,8 +1,15 @@
 const { send } = require('micro')
-const login = require('./login')
+const { parse } = require('cookie')
 const logout = require('./logout')
 const signup = require('./signup')
 const verifyLogin = require('./verifyLogin')
+const createNewLeague = require('./createNewLeague')
+
+const parseCookies = handler => (req, res) => {
+  const cookies = parse((req.headers && req.headers.cookie) || '')
+  const newReq = Object.assign(req, { cookies })
+  return handler(newReq, res)
+}
 
 const dev = async (req, res) => {
   res.setHeader('Content-Type', 'application/json')
@@ -21,10 +28,6 @@ const dev = async (req, res) => {
     send(res, 200)
   } else {
     switch (req.url) {
-      case '/login':
-        await login(req, res)
-        break
-
       case '/verifyLogin':
         await verifyLogin(req, res)
         break
@@ -37,6 +40,10 @@ const dev = async (req, res) => {
         await logout(req, res)
         break
 
+      case '/createNewLeague':
+        await createNewLeague(req, res)
+        break
+
       default:
         send(res, 404, '404. Not found.')
         break
@@ -44,4 +51,4 @@ const dev = async (req, res) => {
   }
 }
 
-module.exports = dev
+module.exports = parseCookies(dev)

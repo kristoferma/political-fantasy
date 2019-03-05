@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
+    "cookie": "^0.3.1",
     "dgraph-js": "^1.2.1",
     "grpc": "^1.18.0",
     "isomorphic-unfetch": "^3.0.0",

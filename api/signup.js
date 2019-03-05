@@ -16,6 +16,7 @@ const login = async (req, res) => {
     const query = `
         {
           loginAttempt(func: eq(email, "${email}")) {
+            uid
             email
             checkpwd(password, "${password}")
             name
@@ -27,11 +28,13 @@ const login = async (req, res) => {
     if (result.loginAttempt.length === 0) {
       const mutation = new dgraph.Mutation()
       mutation.setSetJson({ email, password, name })
-      await transaction.mutate(mutation)
+      const assigned = await transaction.mutate(mutation)
+      // Get the id of the only mutated node: The UserID
+      const userID = assigned.getUidsMap().get('blank-0')
       await transaction.commit()
       res.setHeader(
         'Set-Cookie',
-        `fantasyPolitics=${sign({ email, name }, 'prump')}`
+        `fantasyPolitics=${sign({ email, name, userID }, 'prump')}`
       )
       send(res, 200, {
         message: 'Account created, user logged in',
@@ -45,7 +48,7 @@ const login = async (req, res) => {
       res.setHeader(
         'Set-Cookie',
         `fantasyPolitics=${sign(
-          { email: dbUser.email, name: dbUser.name },
+          { email: dbUser.email, name: dbUser.name, userID: dbUser.uid },
           'prump'
         )}`
       )

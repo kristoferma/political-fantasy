@@ -1,11 +1,21 @@
-import { Form, Input, Icon, DatePicker, TimePicker, Button } from 'antd'
+import { Form, Input, Icon, DatePicker, Button } from 'antd'
 
 class CreateNewLeague extends React.Component {
-  signUp = async e => {
+  onSubmit = async e => {
     e.preventDefault()
     const { validateFields } = this.props.form
     validateFields(async (err, values) => {
-      console.log(values)
+      const { name, date } = values
+      if (!err) {
+        const response = await fetch('http://localhost:3001/createNewLeague', {
+          method: 'POST',
+          body: JSON.stringify({ name, date: date.toISOString() }),
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+      }
     })
   }
 
@@ -14,7 +24,7 @@ class CreateNewLeague extends React.Component {
     const { getFieldDecorator } = this.props.form
     const { isAuthenticated } = this.props
     return (
-      <Form onSubmit={this.signUp}>
+      <Form onSubmit={this.onSubmit}>
         <Form.Item label="League Name">
           {getFieldDecorator('name', {
             rules: [{ required: true, message: 'Please name your league?' }],
@@ -35,17 +45,7 @@ class CreateNewLeague extends React.Component {
                 message: 'Please select a starting date for the league',
               },
             ],
-          })(<DatePicker disabled={!isAuthenticated} />)}
-        </Form.Item>
-        <Form.Item label="Starting Time">
-          {getFieldDecorator('time', {
-            rules: [
-              {
-                required: true,
-                message: 'Please select a starting time for the league',
-              },
-            ],
-          })(<TimePicker disabled={!isAuthenticated} />)}
+          })(<DatePicker disabled={!isAuthenticated} showTime />)}
         </Form.Item>
         <Form.Item>
           <Button type="primary" htmlType="submit" style={{ width: '100%' }}>
