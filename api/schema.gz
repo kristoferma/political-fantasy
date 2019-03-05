@@ -7,3 +7,4 @@ state: uid @reverse .
 leagueName: string .
 leagueOwner: uid @reverse .
 leagueStartDate: dateTime .
+leaguePlayers: uid @reverse .

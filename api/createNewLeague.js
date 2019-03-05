@@ -20,6 +20,7 @@ const createNewLeague = async (req, res) => {
       leagueName: name,
       leagueOwner: { uid: token.userID },
       leagueDate: date,
+      leaguePlayers: { uid: token.userID },
     })
     await txn.mutate(mu)
     txn.commit()
