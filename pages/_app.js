@@ -95,6 +95,13 @@ export default class MyApp extends App {
                   <a>Political Fantasy</a>
                 </Link>
               </Menu.Item>
+              {this.state.name ? (
+                <Menu.Item key="5">
+                  <Link href="/leagues">
+                    <a>Leagues</a>
+                  </Link>
+                </Menu.Item>
+              ) : null}
               <Menu.Item key="1">
                 <Link href="/congress">
                   <a>Congress</a>

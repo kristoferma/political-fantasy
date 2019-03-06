@@ -15,7 +15,7 @@ const createNewLeague = require('./api/createNewLeague')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
-const app = next({ dev })
+const app = next({ dev, quiet: true })
 const handle = app.getRequestHandler()
 
 const jwt = jwtMiddleware({
@@ -52,6 +52,23 @@ app.prepare().then(() => {
     } catch (error) {
       res.status(500).send(error)
     }
+  })
+
+  server.get('/leagues', jwt, async (req, res) => {
+    const { userID } = req.user
+    const query = `{
+      myLeagues(func: uid(0x507d)){
+        ~leaguePlayers: {
+          uid
+          leagueName
+          leagueDate
+        }
+      }
+    }`
+    const data = await dgraphClient.newTxn().query(query)
+    const json = data.getJson()
+    if (req.accepts('html')) return app.render(req, res, '/leagues', json)
+    return res.json(json)
   })
 
   server.get('*', (req, res) => {
