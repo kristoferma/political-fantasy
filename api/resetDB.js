@@ -30,10 +30,16 @@ async function setSchema() {
   }
 }
 
+const congressNumber = {
+  uid: '_:congressNumber',
+  congressNumber: 116,
+}
+
 const getPartyUID = partyLetter => {
   const party = politicalParties.find(
     ({ abbreviation }) => partyLetter === abbreviation
   )
+
   if (!party) {
     console.log(partyLetter)
     return '_:I'
@@ -59,6 +65,7 @@ async function formatData() {
     date_of_birth: new Date(member.date_of_birth).toISOString(),
     party: { uid: getPartyUID(member.party) },
     state: { uid: getStateUID(member.state) },
+    memberOfCongress: { uid: '_:congressNumber' },
   }))
   return formattedCongressMembers
 }
@@ -67,7 +74,12 @@ async function setData(congressMembers) {
   const transaction = dgraphClient.newTxn()
   try {
     const mutation = new dgraph.Mutation()
-    mutation.setSetJson([...politicalParties, ...states, ...congressMembers])
+    mutation.setSetJson([
+      congressNumber,
+      ...politicalParties,
+      ...states,
+      ...congressMembers,
+    ])
     await transaction.mutate(mutation)
     await transaction.commit()
   } catch (error) {

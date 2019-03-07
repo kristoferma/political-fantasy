@@ -1,5 +1,7 @@
 email: string @index(exact) @upsert .
 password: password .
+congressNumber: int @index(int) .
+memberOfCongress: uid @reverse .
 date_of_birth: dateTime .
 party: uid @reverse .
 abbreviation: string @index(exact, fulltext) .

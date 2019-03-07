@@ -7,11 +7,13 @@ const jwtMiddleware = require('express-jwt')
 
 const dgraph = require('dgraph-js')
 const grpc = require('grpc')
-const { sign } = require('jsonwebtoken')
 
 const signup = require('./api/signup')
 const login = require('./api/login')
 const createNewLeague = require('./api/createNewLeague')
+const leagues = require('./api/leagues')
+const league = require('./api/league')
+const congressMembers = require('./api/congressMembers')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
@@ -53,23 +55,10 @@ app.prepare().then(() => {
       res.status(500).send(error)
     }
   })
+  server.get('/api/congress', congressMembers)
 
-  server.get('/leagues', jwt, async (req, res) => {
-    const { userID } = req.user
-    const query = `{
-      myLeagues(func: uid(0x507d)){
-        ~leaguePlayers: {
-          uid
-          leagueName
-          leagueDate
-        }
-      }
-    }`
-    const data = await dgraphClient.newTxn().query(query)
-    const json = data.getJson()
-    if (req.accepts('html')) return app.render(req, res, '/leagues', json)
-    return res.json(json)
-  })
+  server.get('/leagues', jwt, leagues(app))
+  server.get('/league/:id', jwt, league(app))
 
   server.get('*', (req, res) => {
     return handle(req, res)

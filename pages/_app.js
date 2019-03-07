@@ -32,7 +32,6 @@ export default class MyApp extends App {
     try {
       const response = await fetch('http://localhost:3000/api/verifyLogin', {
         method: 'GET',
-        credentials: 'include',
       })
       if (response.ok) {
         const { name } = await response.json()
@@ -47,7 +46,6 @@ export default class MyApp extends App {
     try {
       const response = await fetch('http://localhost:3000/api/logout', {
         method: 'POST',
-        credentials: 'include',
       })
       const json = await response.json()
       if (response.ok) {

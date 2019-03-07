@@ -1,21 +1,22 @@
 import React, { Component } from 'react'
-import { List, Card, Row, Col, Table } from 'antd'
+import { Row, Col, Table } from 'antd'
 import Router from 'next/router'
 
-export default class extends Component {
+class Leagues extends Component {
   static async getInitialProps(props) {
     // Check if rendered on server
-    if (props.query && props.query.myLeagues) return props.query
+    if (props.query && props.query.data) {
+      return props.query
+    }
 
     try {
       const response = await fetch('http://localhost:3000/leagues', {
-        credentials: 'include',
         headers: {
           Accept: 'application/json',
         },
       })
-      const json = await response.json()
-      return json
+      const { data } = await response.json()
+      return { data }
     } catch (error) {
       console.error(error)
       return {}
@@ -23,6 +24,7 @@ export default class extends Component {
   }
 
   render() {
+    const { data } = this.props
     return (
       <Row
         type="flex"
@@ -31,7 +33,7 @@ export default class extends Component {
       >
         <Col span={20}>
           <Table
-            dataSource={this.props.myLeagues}
+            dataSource={data}
             pagination={false}
             columns={[
               { title: 'Name', dataIndex: 'leagueName' },
@@ -41,10 +43,15 @@ export default class extends Component {
                 render: date => new Date(date).toLocaleString(),
               },
             ]}
-            onRowClick={record => Router.push(`/leagues/${record.uid}`)}
+            onRow={record => ({
+              onClick: () => Router.push(`/league/${record.uid}`),
+            })}
+            rowKey="uid"
           />
         </Col>
       </Row>
     )
   }
 }
+
+export default Leagues
