@@ -26,18 +26,8 @@ const columns = [
   {
     title: 'Name',
     dataIndex: 'name',
-    sorter: (a, b) =>
-      `${b.name.last_name}, ${b.name.first_name}`.localeCompare(
-        `${a.name.last_name}, ${a.name.first_name}`
-      ),
+    sorter: (a, b) => b.name.localeCompare(a.name),
     defaultSortOrder: 'descend',
-    render: ({ first_name, middle_name, last_name }) => (
-      <span>
-        {middle_name
-          ? `${last_name}, ${first_name} ${middle_name}`
-          : `${last_name}, ${first_name}`}
-      </span>
-    ),
   },
   {
     title: 'Age',
@@ -105,7 +95,9 @@ export default class CongressMembersTable extends React.Component {
           state,
         }) => ({
           title,
-          name: { first_name, middle_name, last_name },
+          name: middle_name
+            ? `${last_name}, ${first_name} ${middle_name}`
+            : `${last_name}, ${first_name}`,
           date_of_birth,
           party: party[0].name,
           seniority,
@@ -128,7 +120,7 @@ export default class CongressMembersTable extends React.Component {
       shouldSort: true,
       threshold: 0.2,
       minMatchCharLength: 1,
-      keys: ['name.first_name', 'name.last_name', 'name.middle_name'],
+      keys: ['name'],
     })
     const results = fuse.search(e.target.value)
     return this.setState({ filteredData: results })
@@ -136,6 +128,7 @@ export default class CongressMembersTable extends React.Component {
 
   render() {
     const { filteredData } = this.state
+    const { onSelect } = this.props
     return [
       <Input.Search
         placeholder="Search for a congress person"
@@ -145,6 +138,7 @@ export default class CongressMembersTable extends React.Component {
         columns={columns}
         dataSource={filteredData}
         rowKey="date_of_birth"
+        onRow={record => ({ onClick: () => onSelect(record) })}
       />,
     ]
   }

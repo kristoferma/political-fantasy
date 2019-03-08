@@ -18,10 +18,14 @@ module.exports = app => async (req, res) => {
       }
     }
   }`
-  const data = await dgraphClient.newTxn().query(query)
-  const json = data.getJson()
-  const myLeagues = json.myLeagues[0]['~leaguePlayers']
-  if (req.accepts('html'))
-    return app.render(req, res, '/leagues', { data: myLeagues })
-  return res.json({ data: myLeagues })
+  try {
+    const data = await dgraphClient.newTxn().query(query)
+    const json = data.getJson()
+    const myLeagues = json.myLeagues[0]['~leaguePlayers']
+    if (req.accepts('html'))
+      return app.render(req, res, '/leagues', { data: myLeagues })
+    return res.json({ data: myLeagues })
+  } catch (error) {
+    return res.sendStatus(500)
+  }
 }
