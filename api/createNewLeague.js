@@ -20,7 +20,7 @@ module.exports = async (req, res) => {
       leaguePlayers: { uid: token.userID },
     })
     const assigned = await txn.mutate(mu)
-    txn.commit()
+    await txn.commit()
     res.status(200).send({ leagueID: assigned.getUidsMap().get('blank-0') })
   } catch (error) {
     console.error(error)

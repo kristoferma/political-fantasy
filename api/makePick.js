@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
       },
     })
     await txn.mutate(mu)
-    txn.commit()
+    await txn.commit()
     res.status(200).send({ name: token.name })
   } catch (error) {
     console.error(error)

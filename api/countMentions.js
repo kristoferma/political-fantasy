@@ -51,7 +51,7 @@ const countMentions = async () => {
               mentionedCongressPerson: { uid },
             })
             await txn.mutate(mu)
-            txn.commit()
+            await txn.commit()
             return {
               mentionCount,
               date: isoDate,

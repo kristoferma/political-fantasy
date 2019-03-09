@@ -1,5 +1,27 @@
-import { Card, Row, Col, Button } from 'antd'
+import { Card, Row, Col, Button, Input, message } from 'antd'
 import Link from 'next/link'
+import Router from 'next/router'
+import fetch from 'isomorphic-unfetch'
+
+const handleJoinLeague = async value => {
+  try {
+    const response = await fetch('http://localhost:3000/api/joinLeague', {
+      method: 'POST',
+      body: JSON.stringify({ leagueID: value }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const json = await response.json()
+    if (json.error) message.error(json.error)
+    else {
+      message.success(`Sucesfully joined ${json.data.leagueName}`)
+      Router.push(`/league/${json.data.leagueID}`)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 function Home() {
   return (
@@ -38,11 +60,11 @@ function Home() {
             />
           }
           actions={[
-            <Link href="/createLeague">
-              <Button type="primary" disabled>
-                Join
-              </Button>
-            </Link>,
+            <Input.Search
+              type="primary"
+              enterButton="Join"
+              onSearch={handleJoinLeague}
+            />,
           ]}
         >
           <Card.Meta

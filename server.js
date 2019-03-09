@@ -15,6 +15,7 @@ const leagues = require('./api/leagues')
 const league = require('./api/league')
 const congressMembers = require('./api/congressMembers')
 const makePick = require('./api/makePick')
+const joinLeague = require('./api/joinLeague')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
@@ -44,6 +45,7 @@ app.prepare().then(() => {
   server.post('/api/login', login)
 
   server.post('/api/createNewLeague', jwt, createNewLeague)
+  server.post('/api/joinLeague', jwt, joinLeague)
 
   server.get('/api/verifyLogin', jwt, (req, res) => {
     res.send(req.user)

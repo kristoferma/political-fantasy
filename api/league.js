@@ -21,7 +21,7 @@ module.exports = app => async (req, res) => {
           middle_name
           last_name
           date_of_birth
-          party{
+          party {
             name
           }
           seniority
