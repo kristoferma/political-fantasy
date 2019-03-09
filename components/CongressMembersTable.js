@@ -135,11 +135,13 @@ export default class CongressMembersTable extends React.Component {
       <Input.Search
         placeholder="Search for a congress person"
         onChange={this.handleSearch}
+        key="searchbox"
       />,
       <Table
+        key="table"
         columns={columns}
         dataSource={filteredData}
-        rowKey="date_of_birth"
+        rowKey={record => record.uid}
         onRow={
           onSelect ? record => ({ onClick: () => onSelect(record) }) : null
         }

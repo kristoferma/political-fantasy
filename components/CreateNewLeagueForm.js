@@ -1,4 +1,5 @@
 import { Form, Input, Icon, DatePicker, Button } from 'antd'
+import Router from 'next/router'
 
 class CreateNewLeague extends React.Component {
   onSubmit = async e => {
@@ -18,6 +19,8 @@ class CreateNewLeague extends React.Component {
             },
           }
         )
+        const { leagueID } = await response.json()
+        Router.push(`/league/${leagueID}`)
       }
     })
   }

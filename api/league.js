@@ -38,8 +38,9 @@ module.exports = app => async (req, res) => {
   }`
   const results = await dgraphClient.newTxn().query(query)
   const json = results.getJson()
-  const leagueData = json.league[0]['~leaguePlayers'][0]
-  const pickData = json.league[0]['~picker'][0]
+  const dbData = json.league[0]
+  const leagueData = dbData['~leaguePlayers'] ? dbData['~leaguePlayers'][0] : []
+  const pickData = dbData['~picker'] ? dbData['~picker'][0] : []
   const data = { leagueData, pickData }
   if (req.accepts('html')) return app.render(req, res, '/league', { data })
   return res.json({ data })

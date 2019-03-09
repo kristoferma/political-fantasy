@@ -10,8 +10,8 @@ class Leagues extends Component {
     // Check if rendered on server
     if (props.query && props.query.data) return props.query
     try {
-      console.log(props.url)
-      const response = await fetch('http://localhost:3000/league/', {
+      const leagueID = window.location.pathname.split('/')[2]
+      const response = await fetch(`http://localhost:3000/league/${leagueID}`, {
         headers: {
           Accept: 'application/json',
         },
@@ -47,7 +47,7 @@ class Leagues extends Component {
     const { leagueName, leagueDate } = data.leagueData
     const { selectedCongressPerson } = this.state
     const leagueHasStarted = new Date() > new Date(leagueDate)
-    if (data.pickData) {
+    if (data.pickData.length > 0) {
       const {
         title,
         first_name,
@@ -120,6 +120,7 @@ class Leagues extends Component {
         justify="center"
         align="middle"
         style={{ width: '100%', marginTop: '1%' }}
+        key="topRow"
       >
         <Col span={8}>
           <h1>{leagueName}</h1>
@@ -148,12 +149,16 @@ class Leagues extends Component {
         type="flex"
         justify="center"
         style={{ width: '100%', marginTop: '1%' }}
+        key="bottomRow"
       >
         <Col span={20}>
           {leagueHasStarted ? (
             'started'
           ) : (
-            <CongressMembers onSelect={this.handleSelect} />
+            <CongressMembers
+              key="congressMembers"
+              onSelect={this.handleSelect}
+            />
           )}
         </Col>
       </Row>,
