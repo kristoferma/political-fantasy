@@ -14,6 +14,7 @@ const createNewLeague = require('./api/createNewLeague')
 const leagues = require('./api/leagues')
 const league = require('./api/league')
 const congressMembers = require('./api/congressMembers')
+const makePick = require('./api/makePick')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
@@ -55,7 +56,9 @@ app.prepare().then(() => {
       res.status(500).send(error)
     }
   })
+
   server.get('/api/congress', congressMembers)
+  server.post('/api/pick', jwt, makePick)
 
   server.get('/leagues', jwt, leagues(app))
   server.get('/league/:id', jwt, league(app))

@@ -12,6 +12,7 @@ module.exports = async (req, res) => {
     membersOfCongress(func: eq(congressNumber, 116)) {
       congressNumber
       ~memberOfCongress{
+        uid
         title
         first_name
         middle_name

@@ -93,6 +93,7 @@ export default class CongressMembersTable extends React.Component {
           party,
           seniority,
           state,
+          uid,
         }) => ({
           title,
           name: middle_name
@@ -102,6 +103,7 @@ export default class CongressMembersTable extends React.Component {
           party: party[0].name,
           seniority,
           state: state[0].name,
+          uid,
         })
       )
 
@@ -138,7 +140,9 @@ export default class CongressMembersTable extends React.Component {
         columns={columns}
         dataSource={filteredData}
         rowKey="date_of_birth"
-        onRow={record => ({ onClick: () => onSelect(record) })}
+        onRow={
+          onSelect ? record => ({ onClick: () => onSelect(record) }) : null
+        }
       />,
     ]
   }

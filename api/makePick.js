@@ -8,16 +8,21 @@ const clientStub = new dgraph.DgraphClientStub(
 const dgraphClient = new dgraph.DgraphClient(clientStub)
 
 module.exports = async (req, res) => {
-  const { name, date } = req.body
+  const { userID } = req.user
+  const { pickID, leagueID } = req.body
+  console.log({ pickID, leagueID })
   const txn = dgraphClient.newTxn()
   try {
     const token = req.user
     const mu = new dgraph.Mutation()
     mu.setSetJson({
-      leagueName: name,
-      leagueOwner: { uid: token.userID },
-      leagueDate: date,
-      leaguePlayers: { uid: token.userID },
+      picker: { uid: userID },
+      pickedCongressPerson: {
+        uid: pickID,
+      },
+      league: {
+        uid: leagueID,
+      },
     })
     await txn.mutate(mu)
     txn.commit()

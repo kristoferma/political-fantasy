@@ -10,3 +10,8 @@ leagueName: string .
 leagueOwner: uid @reverse .
 leagueStartDate: dateTime .
 leaguePlayers: uid @reverse .
+picker: uid @reverse .
+pickedCongressPerson: uid .
+league: uid @reverse .
+mentionCount: int .
+mentionedCongressPerson: uid @reverse .

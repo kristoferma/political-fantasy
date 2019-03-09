@@ -1,5 +1,6 @@
+/* eslint-disable camelcase */
 import React, { Component } from 'react'
-import { Row, Col, Button } from 'antd'
+import { Row, Col, Button, Card, Table } from 'antd'
 import CongressMembers from '../components/CongressMembersTable'
 
 class Leagues extends Component {
@@ -16,7 +17,7 @@ class Leagues extends Component {
         },
       })
       const json = await response.json()
-      return { data: json }
+      return json
     } catch (error) {
       console.error(error)
       return {}
@@ -27,11 +28,92 @@ class Leagues extends Component {
     this.setState({ selectedCongressPerson: value })
   }
 
+  handleConfirmPick = async () => {
+    const pickID = this.state.selectedCongressPerson.uid
+    const leagueID = window.location.pathname.split('/')[2]
+    const response = await fetch('http://localhost:3000/api/pick', {
+      method: 'POST',
+      body: JSON.stringify({ pickID, leagueID }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+    const json = await response.json()
+    console.log(json)
+  }
+
   render() {
-    const { leagueName, leagueDate } = this.props.data
+    const { data } = this.props
+    const { leagueName, leagueDate } = data.leagueData
     const { selectedCongressPerson } = this.state
-    const hasLeagueStarted = new Date() > new Date(leagueDate)
-    const hasSelectedCongressPerson = false
+    const leagueHasStarted = new Date() > new Date(leagueDate)
+    if (data.pickData) {
+      const {
+        title,
+        first_name,
+        middle_name,
+        last_name,
+        date_of_birth,
+        party,
+        seniority,
+        state,
+      } = data.pickData.pickedCongressPerson[0]
+      return [
+        <Row
+          type="flex"
+          justify="center"
+          align="middle"
+          style={{ width: '100%', marginTop: '1%' }}
+        >
+          <Col span={10}>
+            <h1>{leagueName}</h1>
+          </Col>
+          <Col span={10}>
+            <h2>Starting Date: {new Date(leagueDate).toLocaleString()}</h2>
+          </Col>
+        </Row>,
+        <Row
+          type="flex"
+          justify="space-around"
+          style={{ width: '100%', marginTop: '1%' }}
+        >
+          <Col span={4}>
+            <h1>Your pick</h1>
+            <Card
+              title={`${title} ${first_name} ${
+                middle_name ? `${middle_name} ` : ''
+              }${last_name}`}
+            >
+              <p>State: {state[0].name}</p>
+              <p>Party: {party[0].name}</p>
+              <p>Score: League has not started</p>
+            </Card>
+          </Col>
+          <Col span={4}>
+            <h1>Score by players</h1>
+            <Table
+              dataSource={[{ key: 1, name: 'Kristófer Másson', score: 1 }]}
+              columns={[
+                { title: 'Name', dataIndex: 'name' },
+                { title: 'Score', dataIndex: 'score' },
+              ]}
+              pagination={false}
+            />
+          </Col>
+          <Col span={4}>
+            <h1>Score by congress people</h1>
+            <Table
+              dataSource={[{ key: 1, name: 'Kristófer Másson', score: 1 }]}
+              columns={[
+                { title: 'Name', dataIndex: 'name' },
+                { title: 'Score', dataIndex: 'score' },
+              ]}
+              pagination={false}
+            />
+          </Col>
+        </Row>,
+      ]
+    }
     return [
       <Row
         type="flex"
@@ -52,7 +134,12 @@ class Leagues extends Component {
           </h1>
         </Col>
         <Col span={4}>
-          <Button type="primary" block disabled={!selectedCongressPerson}>
+          <Button
+            type="primary"
+            block
+            disabled={!selectedCongressPerson}
+            onClick={this.handleConfirmPick}
+          >
             Confirm
           </Button>
         </Col>
@@ -63,7 +150,7 @@ class Leagues extends Component {
         style={{ width: '100%', marginTop: '1%' }}
       >
         <Col span={20}>
-          {hasLeagueStarted ? (
+          {leagueHasStarted ? (
             'started'
           ) : (
             <CongressMembers onSelect={this.handleSelect} />
