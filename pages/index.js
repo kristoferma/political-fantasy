@@ -5,7 +5,7 @@ import fetch from 'isomorphic-unfetch'
 
 const handleJoinLeague = async value => {
   try {
-    const response = await fetch('http://localhost:3000/api/joinLeague', {
+    const response = await fetch('/api/joinLeague', {
       method: 'POST',
       body: JSON.stringify({ leagueID: value }),
       headers: {

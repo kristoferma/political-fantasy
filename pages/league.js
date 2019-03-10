@@ -1,17 +1,60 @@
 /* eslint-disable camelcase */
 import React, { Component } from 'react'
-import { Row, Col, Button, Card, Table } from 'antd'
+import { Row, Col, Button, Card } from 'antd'
 import CongressMembers from '../components/CongressMembersTable'
+import LeagueScoreByPlayers from '../components/LeagueScoreByPlayers'
+import LeagueScoreByCongressPerson from '../components/LeagueScoreByCongressPerson'
 
-class Leagues extends Component {
-  state = { selectedCongressPerson: undefined }
+const PickedPersonCard = ({ data, leagueHasStarted }) => {
+  if (data.pickData.pickedCongressPerson) {
+    const {
+      first_name,
+      middle_name,
+      last_name,
+      party,
+      state,
+    } = data.pickData.pickedCongressPerson[0]
+    const { mentionCount } = data.pickData.pickedCongressPerson[0][
+      '~mentionedCongressPerson'
+    ][0]
+    return (
+      <Card
+        title={`${first_name} ${
+          middle_name ? `${middle_name} ` : ''
+        }${last_name}`}
+      >
+        <p>State: {state[0].name}</p>
+        <p>Party: {party[0].name}</p>
+        <p>
+          Score: {leagueHasStarted ? mentionCount : 'League has not started'}
+        </p>
+      </Card>
+    )
+  }
+  return (
+    <Card title="Missed pick deadline">
+      <p>The league started before you made your pick</p>
+      <p>Please start a new league if you want to participate</p>
+    </Card>
+  )
+}
+
+class League extends Component {
+  constructor(props) {
+    super(props)
+    this.state = { selectedCongressPerson: undefined, data: this.props.data }
+  }
 
   static async getInitialProps(props) {
     // Check if rendered on server
     if (props.query && props.query.data) return props.query
+    return this.getNewState()
+  }
+
+  getNewState = async () => {
     try {
       const leagueID = window.location.pathname.split('/')[2]
-      const response = await fetch(`http://localhost:3000/league/${leagueID}`, {
+      const response = await fetch(`/league/${leagueID}`, {
         headers: {
           Accept: 'application/json',
         },
@@ -31,44 +74,38 @@ class Leagues extends Component {
   handleConfirmPick = async () => {
     const pickID = this.state.selectedCongressPerson.uid
     const leagueID = window.location.pathname.split('/')[2]
-    const response = await fetch('http://localhost:3000/api/pick', {
+    const response = await fetch('/api/pick', {
       method: 'POST',
       body: JSON.stringify({ pickID, leagueID }),
       headers: {
         'Content-Type': 'application/json',
       },
     })
-    const json = await response.json()
-    console.log(json)
+    if (response.ok) {
+      const data = await this.getNewState()
+      this.setState({ data: data.data })
+    }
   }
 
   render() {
-    const { data } = this.props
+    const { data, selectedCongressPerson } = this.state
     const { leagueName, leagueDate } = data.leagueData
-    const { selectedCongressPerson } = this.state
     const leagueHasStarted = new Date() > new Date(leagueDate)
-    if (data.pickData.length > 0) {
-      const {
-        title,
-        first_name,
-        middle_name,
-        last_name,
-        date_of_birth,
-        party,
-        seniority,
-        state,
-      } = data.pickData.pickedCongressPerson[0]
+    if (
+      data.pickData &&
+      data.pickData.pickedCongressPerson &&
+      data.pickData.pickedCongressPerson.length > 0
+    ) {
       return [
         <Row
           type="flex"
           justify="center"
           align="middle"
           style={{ width: '100%', marginTop: '1%' }}
+          key="upper row"
         >
-          <Col span={10}>
+          <Col span={23}>
             <h1>{leagueName}</h1>
-          </Col>
-          <Col span={10}>
             <h2>Starting Date: {new Date(leagueDate).toLocaleString()}</h2>
           </Col>
         </Row>,
@@ -76,40 +113,19 @@ class Leagues extends Component {
           type="flex"
           justify="space-around"
           style={{ width: '100%', marginTop: '1%' }}
+          key="lower row"
         >
-          <Col span={4}>
+          <Col span={7}>
             <h1>Your pick</h1>
-            <Card
-              title={`${title} ${first_name} ${
-                middle_name ? `${middle_name} ` : ''
-              }${last_name}`}
-            >
-              <p>State: {state[0].name}</p>
-              <p>Party: {party[0].name}</p>
-              <p>Score: League has not started</p>
-            </Card>
+            <PickedPersonCard data={data} leagueHasStarted={leagueHasStarted} />
           </Col>
-          <Col span={4}>
+          <Col span={7}>
             <h1>Score by players</h1>
-            <Table
-              dataSource={[{ key: 1, name: 'Kristófer Másson', score: 1 }]}
-              columns={[
-                { title: 'Name', dataIndex: 'name' },
-                { title: 'Score', dataIndex: 'score' },
-              ]}
-              pagination={false}
-            />
+            <LeagueScoreByPlayers leagueHasStarted={leagueHasStarted} />
           </Col>
-          <Col span={4}>
+          <Col span={7}>
             <h1>Score by congress people</h1>
-            <Table
-              dataSource={[{ key: 1, name: 'Kristófer Másson', score: 1 }]}
-              columns={[
-                { title: 'Name', dataIndex: 'name' },
-                { title: 'Score', dataIndex: 'score' },
-              ]}
-              pagination={false}
-            />
+            <LeagueScoreByCongressPerson leagueHasStarted={leagueHasStarted} />
           </Col>
         </Row>,
       ]
@@ -169,4 +185,4 @@ class Leagues extends Component {
   }
 }
 
-export default Leagues
+export default League

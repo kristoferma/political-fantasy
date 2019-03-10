@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { Table, Input } from 'antd'
+import { Table, Input, Row, Col } from 'antd'
 import Fuse from 'fuse.js'
 
 import states from '../constants/states'
@@ -77,7 +77,7 @@ export default class CongressMembersTable extends React.Component {
 
   componentDidMount = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/congress', {
+      const response = await fetch('/api/congress', {
         headers: {
           Accept: 'application/json',
         },
@@ -132,11 +132,21 @@ export default class CongressMembersTable extends React.Component {
     const { filteredData } = this.state
     const { onSelect } = this.props
     return [
-      <Input.Search
-        placeholder="Search for a congress person"
-        onChange={this.handleSearch}
+      <Row
+        type="flex"
+        justify="center"
+        align="middle"
+        style={{ width: '100%', marginTop: '1%', marginBottom: '1%' }}
         key="searchbox"
-      />,
+      >
+        <Col span={12}>
+          <Input.Search
+            placeholder="Search for a congress person"
+            size="large"
+            onChange={this.handleSearch}
+          />
+        </Col>
+      </Row>,
       <Table
         key="table"
         columns={columns}

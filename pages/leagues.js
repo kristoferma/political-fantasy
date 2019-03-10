@@ -10,7 +10,7 @@ class Leagues extends Component {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/leagues', {
+      const response = await fetch('/leagues', {
         headers: {
           Accept: 'application/json',
         },

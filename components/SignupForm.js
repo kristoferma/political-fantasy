@@ -11,9 +11,7 @@ class SignupForm extends React.Component {
       if (!err)
         try {
           const response = await fetch(
-            this.state.isLogin
-              ? 'http://localhost:3000/api/login'
-              : 'http://localhost:3000/api/signup',
+            this.state.isLogin ? '/api/login' : '/api/signup',
             {
               method: 'POST',
               body: JSON.stringify(values),

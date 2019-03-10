@@ -8,17 +8,14 @@ class CreateNewLeague extends React.Component {
     validateFields(async (err, values) => {
       const { name, date } = values
       if (!err) {
-        const response = await fetch(
-          'http://localhost:3000/api/createNewLeague',
-          {
-            method: 'POST',
-            body: JSON.stringify({ name, date: date.toISOString() }),
-            credentials: 'include',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+        const response = await fetch('/api/createNewLeague', {
+          method: 'POST',
+          body: JSON.stringify({ name, date: date.toISOString() }),
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         const { leagueID } = await response.json()
         Router.push(`/league/${leagueID}`)
       }

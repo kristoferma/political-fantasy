@@ -39,7 +39,7 @@ export default class MyApp extends App {
 
   verifyLogin = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/verifyLogin', {
+      const response = await fetch('/api/verifyLogin', {
         method: 'GET',
       })
       if (response.ok) {
@@ -53,7 +53,7 @@ export default class MyApp extends App {
 
   logout = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/logout', {
+      const response = await fetch('/api/logout', {
         method: 'POST',
       })
       const json = await response.json()
@@ -116,10 +116,6 @@ export default class MyApp extends App {
                   <a>Congress</a>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="2" onClick={this.verifyLogin}>
-                Verify Login
-              </Menu.Item>
-              <Menu.Item key="3">nav 3</Menu.Item>
               {this.state.name ? (
                 <Menu.SubMenu
                   title={this.state.name}

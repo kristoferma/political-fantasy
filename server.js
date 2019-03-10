@@ -16,6 +16,7 @@ const league = require('./api/league')
 const congressMembers = require('./api/congressMembers')
 const makePick = require('./api/makePick')
 const joinLeague = require('./api/joinLeague')
+const leagueScore = require('./api/leagueScore')
 
 const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
@@ -64,6 +65,8 @@ app.prepare().then(() => {
 
   server.get('/leagues', jwt, leagues(app))
   server.get('/league/:id', jwt, league(app))
+
+  server.get('/api/leagueScore/:leagueID', jwt, leagueScore)
 
   server.get('*', (req, res) => {
     return handle(req, res)

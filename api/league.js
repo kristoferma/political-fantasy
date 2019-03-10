@@ -28,6 +28,9 @@ module.exports = app => async (req, res) => {
           state {
             name
           }
+          ~mentionedCongressPerson {
+            mentionCount
+          }
         }
       }
       ~leaguePlayers @filter(uid(${leagueID})) {
