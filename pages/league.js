@@ -126,23 +126,31 @@ class Leagues extends Component {
           <h1>{leagueName}</h1>
           <h2>Starting Date: {new Date(leagueDate).toLocaleString()}</h2>
         </Col>
-        <Col span={8}>
-          <h1>1st Pick:</h1>
-          <h1>
-            {selectedCongressPerson
-              ? `${selectedCongressPerson.title} ${selectedCongressPerson.name}`
-              : 'Please select from the list below'}
-          </h1>
-        </Col>
+        {leagueHasStarted ? (
+          <Col span={8} />
+        ) : (
+          <Col span={8}>
+            <h1>1st Pick:</h1>
+            <h1>
+              {selectedCongressPerson
+                ? `${selectedCongressPerson.title} ${
+                    selectedCongressPerson.name
+                  }`
+                : 'Please select from the list below'}
+            </h1>
+          </Col>
+        )}
         <Col span={4}>
-          <Button
-            type="primary"
-            block
-            disabled={!selectedCongressPerson}
-            onClick={this.handleConfirmPick}
-          >
-            Confirm
-          </Button>
+          {leagueHasStarted ? null : (
+            <Button
+              type="primary"
+              block
+              disabled={!selectedCongressPerson}
+              onClick={this.handleConfirmPick}
+            >
+              Confirm
+            </Button>
+          )}
         </Col>
       </Row>,
       <Row
@@ -152,13 +160,8 @@ class Leagues extends Component {
         key="bottomRow"
       >
         <Col span={20}>
-          {leagueHasStarted ? (
-            'started'
-          ) : (
-            <CongressMembers
-              key="congressMembers"
-              onSelect={this.handleSelect}
-            />
+          {leagueHasStarted ? null : (
+            <CongressMembers onSelect={this.handleSelect} />
           )}
         </Col>
       </Row>,

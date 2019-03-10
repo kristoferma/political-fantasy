@@ -34,7 +34,7 @@ class SignupForm extends React.Component {
           if (response.ok) {
             this.props.onSuccesfullAuthentication(json.name)
             message.success(json.message, 10)
-            Router.push(`/user/${json.name}`)
+            Router.push(`/`)
           }
         } catch (error) {
           console.error(error)

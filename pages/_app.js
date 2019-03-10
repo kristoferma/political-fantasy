@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import { Layout, Menu, message } from 'antd'
 import Link from 'next/link'
+import Router from 'next/router'
 import App, { Container } from 'next/app'
 import React from 'react'
 import fetch from 'isomorphic-unfetch'
@@ -9,6 +10,7 @@ import '../static/styles/application.less'
 export default class MyApp extends App {
   state = {
     name: false,
+    selectedMenuItem: '',
   }
 
   static async getInitialProps({ Component, ctx }) {
@@ -22,6 +24,13 @@ export default class MyApp extends App {
 
   componentDidMount = async () => {
     await this.verifyLogin()
+    if (window)
+      this.setState({
+        selectedMenuItem: window.location.pathname.split('/')[1],
+      })
+    Router.events.on('routeChangeStart', url =>
+      this.setState({ selectedMenuItem: url.split('/')[1] })
+    )
   }
 
   onSuccesfullAuthentication = name => {
@@ -51,6 +60,7 @@ export default class MyApp extends App {
       if (response.ok) {
         message.success(json.message)
         this.setState({ name: false })
+        Router.push('/')
       } else {
         message.error(json.error)
       }
@@ -87,20 +97,21 @@ export default class MyApp extends App {
                 justifyContent: 'space-between',
               }}
               defaultSelectedKeys={['0']}
+              selectedKeys={[this.state.selectedMenuItem]}
             >
-              <Menu.Item key="0">
+              <Menu.Item key="index">
                 <Link href="/index">
                   <a>Political Fantasy</a>
                 </Link>
               </Menu.Item>
               {this.state.name ? (
-                <Menu.Item key="5">
+                <Menu.Item key="leagues">
                   <Link href="/leagues">
                     <a>Leagues</a>
                   </Link>
                 </Menu.Item>
               ) : null}
-              <Menu.Item key="1">
+              <Menu.Item key="congress">
                 <Link href="/congress">
                   <a>Congress</a>
                 </Link>
@@ -114,15 +125,7 @@ export default class MyApp extends App {
                   title={this.state.name}
                   style={{ marginLeft: 'auto' }}
                 >
-                  <Menu.Item key="setting:1">
-                    <Link
-                      href={`/user?user=${this.state.name}`}
-                      as={`/user/${this.state.name}`}
-                    >
-                      <a>Profile</a>
-                    </Link>
-                  </Menu.Item>
-                  <Menu.Item key="setting:2" onClick={this.logout}>
+                  <Menu.Item key="signup" onClick={this.logout}>
                     Log out
                   </Menu.Item>
                 </Menu.SubMenu>
