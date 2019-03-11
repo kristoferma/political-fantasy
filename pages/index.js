@@ -29,7 +29,7 @@ function Home() {
       gutter={16}
       style={{ display: 'flex', alignItems: 'center', height: '100%' }}
     >
-      <Col span={6} offset={6}>
+      <Col span={7} offset={5}>
         <Card
           cover={
             <img
@@ -51,7 +51,7 @@ function Home() {
           />
         </Card>
       </Col>
-      <Col span={6}>
+      <Col span={7}>
         <Card
           cover={
             <img
