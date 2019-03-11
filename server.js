@@ -30,12 +30,6 @@ const jwt = jwtMiddleware({
   },
 })
 
-const clientStub = new dgraph.DgraphClientStub(
-  'localhost:9080',
-  grpc.credentials.createInsecure()
-)
-const dgraphClient = new dgraph.DgraphClient(clientStub)
-
 app.prepare().then(() => {
   const server = express()
   server.use(cors())

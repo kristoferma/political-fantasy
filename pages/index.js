@@ -29,12 +29,12 @@ function Home() {
       gutter={16}
       style={{ display: 'flex', alignItems: 'center', height: '100%' }}
     >
-      <Col span={8} offset={4}>
+      <Col span={6} offset={6}>
         <Card
           cover={
             <img
               alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Seal_of_the_United_States_House_of_Representatives.svg"
             />
           }
           actions={[
@@ -51,12 +51,12 @@ function Home() {
           />
         </Card>
       </Col>
-      <Col span={8}>
+      <Col span={6}>
         <Card
           cover={
             <img
               alt="example"
-              src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+              src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Seal_of_the_United_States_Senate.svg"
             />
           }
           actions={[

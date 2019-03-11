@@ -6,7 +6,10 @@ import LeagueScoreByPlayers from '../components/LeagueScoreByPlayers'
 import LeagueScoreByCongressPerson from '../components/LeagueScoreByCongressPerson'
 
 const PickedPersonCard = ({ data, leagueHasStarted }) => {
-  if (data.pickData.pickedCongressPerson) {
+  if (
+    data.pickData.pickedCongressPerson &&
+    data.pickData.pickedCongressPerson[0]
+  ) {
     const {
       first_name,
       middle_name,
